@@ -60,7 +60,7 @@ class PreviewConnectRender {
       required Offset end,
       required Axis direction}) {
     _linePath.reset();
-    var paintColor = Theme.of(context).colorScheme.secondaryVariant;
+    var paintColor = Colors.red;
     _paint.color = paintColor;
     _trianglePaint.color = paintColor;
     if (direction == Axis.horizontal) {

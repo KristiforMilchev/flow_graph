@@ -142,7 +142,7 @@ class _NodeWidgetState extends State<_NodeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var focusColor = Theme.of(context).colorScheme.secondaryVariant;
+    var focusColor = Colors.red;
 
     return GestureDetector(
       onTap: () {
