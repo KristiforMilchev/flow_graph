@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:flow_graph/src/graph.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +25,28 @@ class GraphView<T> extends StatefulWidget {
 class _GraphViewState<T> extends State<GraphView<T>> {
   final GlobalKey _boardKey = GlobalKey();
   Offset _boardPosition = Offset.zero;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      // Calculate the initial position to center the graph
+      var graphSize = widget.graph.computeSize();
+      var boardSize =
+          (_boardKey.currentContext?.findRenderObject() as RenderBox?)?.size ??
+              Size.zero;
+
+      double dx = (boardSize.width - graphSize.width) / 2;
+      double dy = (boardSize.height - graphSize.height) / 2;
+
+      // Update the state with the calculated initial position
+      setState(() {
+        _boardPosition = Offset(dx, dy);
+        widget.controller?._updatePosition(_boardPosition);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +78,6 @@ class _GraphViewState<T> extends State<GraphView<T>> {
             dy = boardSize.height - graphSize.height - kMainAxisSpace;
           }
         }
-
-        setState(() {
-          _boardPosition = Offset(dx, dy);
-          widget.controller?._updatePosition(_boardPosition);
-        });
       },
       child: ClipRect(
         child: GraphBoard(
